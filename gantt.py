@@ -27,23 +27,39 @@ def start_tasks(df):
     days = delta.astype('timedelta64[D]')
     return days
 
+def _start_tasks(df):
+    col = Col(*df.columns[:4])
+    days = [d.toordinal() for d in df[col.start]]
+    return days
+
 def end_tasks(df):
     col = Col(*df.columns[:4])
     delta = (df[col.end] - project_start(df))
     days = delta.astype('timedelta64[D]')
     return days
 
+def _end_tasks(df):
+    col = Col(*df.columns[:4])
+    days = [d.toordinal() for d in df[col.end]]
+    return days
+
+def get_labels(ds):
+    import datetime
+    stimes = [datetime.date.fromordinal(d).ctime().split() for d in ds]
+    monyear = [s[1] + s[-1][-2:] for s in stimes]
+    return monyear
+
 def plot(df):
     col = Col(*df.columns[:4])
-    idays = start_tasks(df)
-    fdays = end_tasks(df)
+    idays = _start_tasks(df)
+    fdays = _end_tasks(df)
     seaborn.barplot(x=fdays, y=df[col.name])
     seaborn.barplot(x=idays, y=df[col.name], color="#FFFFFF")
-    days_accumulated = [sum(DAYS_MONTH[:i]) for i in range(12)]
-    start_month = project_start(df).month - 1
-    end_month = project_end(df).month + 1
-    plt.xlim((days_accumulated[start_month], days_accumulated[end_month-start_month]))
-    plt.xticks(days_accumulated[:end_month-start_month:], MONTH_LABELS[start_month:end_month:])
+    xlim = min(idays), max(fdays)
+    plt.xlim(xlim)
+    
+    import datetime
+    plt.xticks(idays, get_labels(idays))
     plt.xlabel('')
     plt.show()
     
@@ -53,6 +69,7 @@ def main():
         csv = sys.argv[1]
     except IndexError:
         print(f"Usage: {sys.argv[0]} csvfile")
+        raise SystemExit
 
     df = pandas.read_csv(csv, parse_dates=[1, 2])
     col = Col(*df.columns[:4])

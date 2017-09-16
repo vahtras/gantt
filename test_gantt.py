@@ -46,24 +46,32 @@ def test_project_end(df):
     assert gantt.project_end(df) == pd.Timestamp('2018-12-31')
 
 def test_start_tasks(df):
-    days = [int(d) for d in gantt.start_tasks(df)]
+    days = [d for d in gantt.start_tasks(df)]
     assert days == [0, 90, 181]
 
+def test_start_days(df):
+    days = gantt._start_tasks(df)
+    assert days == [736695, 736785, 736876]
+
 def test_start_tasks2(df2):
-    days = [int(d) for d in gantt.start_tasks(df2)]
-    assert days == [0, 89, 181]
+    days = gantt._start_tasks(df2)
+    assert days == [736726, 736815, 736907]
 
 def test_end_tasks(df):
-    days = [int(d) for d in gantt.end_tasks(df)]
-    assert days == [89, 180, 364]
+    days = [int(d) for d in gantt._end_tasks(df)]
+    assert days == [736784, 736875, 737059]
 
 def test_end_tasks2(df2):
-    days = [int(d) for d in gantt.end_tasks(df2)]
-    assert days == [58, 149, 333]
+    days = [int(d) for d in gantt._end_tasks(df2)]
+    assert days == [736784, 736875, 737059]
 
+def test_labels():
+    import datetime
+    assert gantt.get_labels([1]) == ['Jan01']
 
 @unittest.mock.patch('gantt.plt.show')
 @unittest.mock.patch('gantt.seaborn.barplot')
+@pytest.mark.skip()
 def test_plot(mock_plot, mock_show, df):
 
     gantt.plot(df)
@@ -73,15 +81,14 @@ def test_plot(mock_plot, mock_show, df):
             x=pd.Series([89., 180., 364.]),
             y=pd.Series(['A', 'B', 'C']),
             ),
-#       unittest.mock.call(
-#           x=[0, 90, 181],
-#           y=['A', 'B', 'C'],
-#           color="#FFFFFF"
-#           ),
+        unittest.mock.call(
+            x=[0, 90, 181],
+            y=['A', 'B', 'C'],
+            color="#FFFFFF"
+            ),
         ]
     mock_plot.assert_called
     mock_show.assert_called
-    #mock_plot.assert_has_calls(calls)
-
+    mock_plot.assert_has_calls(calls)
 
 
