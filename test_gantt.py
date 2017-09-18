@@ -21,6 +21,13 @@ B,2018-05-01,2018-06-30,bbb
 C,2018-08-01,2018-12-31,ccc
 """
 
+csv3 = """\
+Proj,From,To,Comment
+A,2018-02-15,2018-03-31,aaa
+B,2018-05-01,2018-06-30,bbb
+C,2018-08-01,2018-12-15,ccc
+"""
+
 @pytest.fixture
 def df():
     csv_stream = io.StringIO(csv)
@@ -37,6 +44,14 @@ def df2():
         parse_dates=['From', 'To']
         )
 
+@pytest.fixture
+def df3():
+    csv_stream = io.StringIO(csv3)
+    return pd.read_csv(
+        csv_stream,
+        parse_dates=['From', 'To']
+        )
+
 def test_project_start(df):
     assert gantt.project_start(df) == pd.Timestamp('2018-01-01')
 
@@ -45,10 +60,6 @@ def test_project_start2(df2):
 
 def test_project_end(df):
     assert gantt.project_end(df) == pd.Timestamp('2018-12-31')
-
-def test_start_tasks(df):
-    days = [d for d in gantt.start_tasks(df)]
-    assert days == [0, 90, 181]
 
 def test_start_days(df):
     days = gantt._start_tasks(df)
@@ -91,6 +102,12 @@ def test_plot(mock_plot, mock_show, df):
     mock_show.assert_called
     mock_plot.assert_has_calls(calls)
 
+
+def test_start_yearmonth(df3):
+    assert gantt.start_yearmonth(df3) == datetime.date(2018, 2, 1)
+
+def test_end_yearmonth(df3):
+    assert gantt.end_yearmonth(df3) == datetime.date(2019, 1, 1)
 
 def test_set_ticks(df):
     tick_dates = [736695, 736785, 736876, 736968, 737060]
