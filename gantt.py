@@ -41,10 +41,10 @@ def get_labels(ds):
 
 def plot(df):
     col = Col(*df.columns[:4])
-    idays = _start_tasks(df)
-    fdays = _end_tasks(df)
-    seaborn.barplot(x=fdays, y=df[col.name])
-    seaborn.barplot(x=idays, y=df[col.name], color="#FFFFFF")
+    df['idays'] = _start_tasks(df)
+    df['fdays'] = _end_tasks(df)
+    seaborn.barplot(x='fdays', y=col.name, data=df)
+    seaborn.barplot(x='idays', y=col.name, data=df, color="#FFFFFF")
 
     start = start_yearmonth(df)
     end = end_yearmonth(df)
