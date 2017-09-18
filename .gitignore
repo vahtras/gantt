@@ -6,3 +6,4 @@ htmlcov
 .coverage
 .ipynb*
 errors.err
+*.egg-info
