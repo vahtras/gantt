@@ -3,6 +3,8 @@ import pandas
 import seaborn
 import matplotlib.pyplot as plt
 import collections
+import datetime
+import dateutil
 
 
 DAYS_MONTH = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
@@ -58,8 +60,9 @@ def plot(df):
     xlim = min(idays), max(fdays)
     plt.xlim(xlim)
     
-    import datetime
-    plt.xticks(idays, get_labels(idays))
+    tick_dates = get_tick_dates(project_start(df), project_end(df), 3)
+    tick_labels = get_labels(tick_dates)
+    plt.xticks(tick_dates, tick_labels)
     plt.xlabel('')
     plt.show()
     
@@ -77,6 +80,16 @@ def main():
     print(df)
 
     plot(df)
+
+def get_tick_dates(start, stop, months=3):
+
+    from dateutil.relativedelta import relativedelta
+    dates = [start]
+    while dates[-1] < stop:
+        step = dates[-1] + relativedelta(months=months)
+        print(step)
+        dates.append(step)
+    return [d.toordinal() for d in dates]
 
 if __name__ == "__main__":
     main()

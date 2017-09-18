@@ -3,6 +3,7 @@ import unittest.mock
 import pandas as pd
 import pandas.util.testing as pdt
 import io
+import datetime
 
 import gantt
 
@@ -66,7 +67,6 @@ def test_end_tasks2(df2):
     assert days == [736784, 736875, 737059]
 
 def test_labels():
-    import datetime
     assert gantt.get_labels([1]) == ['Jan01']
 
 @unittest.mock.patch('gantt.plt.show')
@@ -92,3 +92,9 @@ def test_plot(mock_plot, mock_show, df):
     mock_plot.assert_has_calls(calls)
 
 
+def test_set_ticks(df):
+    tick_dates = [736695, 736785, 736876, 736968, 737060]
+    assert gantt.get_tick_dates(
+        datetime.date(2018,1,1), datetime.date(2018,12,31), months=3
+        ) == tick_dates
+        
