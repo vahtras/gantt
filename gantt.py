@@ -72,8 +72,8 @@ def main():
     try:
         csv = sys.argv[1]
     except IndexError:
-        print(f"Usage: {sys.argv[0]} csvfile")
-        raise SystemExit
+        print("Usage: {} csvfile".format(sys.argv[0]))
+        sys.exit(1)
 
     df = pandas.read_csv(csv, parse_dates=[1, 2])
     col = Col(*df.columns[:4])
@@ -91,5 +91,5 @@ def get_tick_dates(start, stop, months=3):
         dates.append(step)
     return [d.toordinal() for d in dates]
 
-if __name__ == "__main__":
+if __name__ == "__main__": #pragma: nocover
     main()

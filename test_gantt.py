@@ -4,6 +4,7 @@ import pandas as pd
 import pandas.util.testing as pdt
 import io
 import datetime
+import sys
 
 import gantt
 
@@ -82,25 +83,12 @@ def test_labels():
 
 @unittest.mock.patch('gantt.plt.show')
 @unittest.mock.patch('gantt.seaborn.barplot')
-@pytest.mark.skip()
 def test_plot(mock_plot, mock_show, df):
 
     gantt.plot(df)
 
-    calls = [
-        unittest.mock.call(
-            x=pd.Series([89., 180., 364.]),
-            y=pd.Series(['A', 'B', 'C']),
-            ),
-        unittest.mock.call(
-            x=[0, 90, 181],
-            y=['A', 'B', 'C'],
-            color="#FFFFFF"
-            ),
-        ]
     mock_plot.assert_called
     mock_show.assert_called
-    mock_plot.assert_has_calls(calls)
 
 
 def test_start_yearmonth(df3):
@@ -115,3 +103,18 @@ def test_set_ticks(df):
         datetime.date(2018,1,1), datetime.date(2018,12,31), months=3
         ) == tick_dates
         
+
+@unittest.mock.patch('gantt.plot')
+@unittest.mock.patch('gantt.Col')
+@unittest.mock.patch('pandas.read_csv')
+def test_main(mock_read_csv, mock_col, mock_plot):
+    sys.argv[1:] = ['test.csv']
+    gantt.main()
+    mock_read_csv.called_once_with('test.csv', parse_dates=[1, 2])
+    mock_plot.called
+    mock_plot.called
+
+def test_main_no_args():
+    sys.argv[1:] = []
+    with pytest.raises(SystemExit):
+        gantt.main()
