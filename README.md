@@ -1,10 +1,10 @@
 # minimal-gantt
 
 A script that takes a CSV file as input and produces
-a Gantt chart in as a bar plots using the Seaborn library
-
-It assumes that the CSV file has the first three columns as
+a simple Gantt chart. 
+It is assumed that the CSV file has the first three columns as
 task name, starting date and end date in ISO format.
+The script makes use of the Seaborn library to generate the chart.
 
 ## Install
 
@@ -31,6 +31,5 @@ $ python -m gantt test.csv
 2  Postprocess 2018-07-01 2018-12-31  comment
 ```
 
-![gantt chartt]("img/Figure_1.png")
-
+<img src="img/Figure_1.png" height="400">
 
