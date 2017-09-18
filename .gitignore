@@ -2,3 +2,6 @@ venv*
 *.pyc
 .cache
 .vimrc
+htmlcov
+.coverage
+.ipynb*
