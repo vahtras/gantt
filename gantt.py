@@ -6,7 +6,7 @@ import collections
 import datetime
 from dateutil.relativedelta import relativedelta
 
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 DAYS_MONTH = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 MONTH_LABELS = (
