@@ -1,4 +1,5 @@
 import setuptools
+from gantt import __version__
 
 setuptools.setup(
     name="minimal-gantt",
@@ -6,8 +7,9 @@ setuptools.setup(
     author_email="olav.vahtras@gmail.com",
     description="A minimal Gantt chart generator",
     license="MIT",
-    version="0.1",
-    py_modules="gantt",
+    version=__version__,
+    py_modules=["gantt"],
+    scripts=["csv2gantt"],
     install_requires=["pandas", "seaborn"],
     )
     
