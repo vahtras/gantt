@@ -70,13 +70,15 @@ def end_yearmonth(df):
     return datetime.date(ps.year, ps.month, 1) + relativedelta(months=1)
 
 def main():
-    try:
-        csv = sys.argv[1]
-    except IndexError:
-        print("Usage: {} csvfile".format(sys.argv[0]))
-        sys.exit(1)
 
-    df = pandas.read_csv(csv, parse_dates=[1, 2])
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('csvfile', help='CSV file')
+
+    args = parser.parse_args()
+
+    df = pandas.read_csv(args.csvfile, parse_dates=[1, 2])
     col = Col(*df.columns[:4])
     df = df.sort_values(col.start)
     print(df)
